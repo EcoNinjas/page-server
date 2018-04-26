@@ -8,7 +8,8 @@
                  [ring/ring-json "0.4.0"]
                  [aleph "0.4.4"]
                  [environ "1.1.0"]
-                 [com.cemerick/friend "0.2.3"]]
+                 [com.cemerick/friend "0.2.3"]
+                 [hiccup "1.0.5"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
   :ring {:handler econinja.handler/app}

@@ -2,6 +2,7 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [econinja.vars :refer [get-var]]
+            [clojure.java.shell :refer [sh]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-params]]
             [cemerick.friend :as friend]
@@ -13,12 +14,12 @@
                     :password (creds/hash-bcrypt "admin_password")
                     :roles #{::admin}}})
 (defroutes app-routes
-  (GET "/protected" req
-       (friend/authorize #{::admin}
-                         "Hello private work"))
+;;  (GET "/protected" req
+;;       (friend/authorize #{::admin}
+;;                         "Update initialised"))
   (PUT "/update" req
        (friend/authorize #{::admin}
-                         "Hello private update"))
+                         ((sh "sh" (get-var :update-script)) :out)))
   (route/files "/" {:root (get-var :page-root)})
   (route/not-found (html5 [:head [:title "EcoNinjas - 404 - Sie sind auf der falschen Fährte"]]
                           [:body {:background "/images/Hintergrund.jpg"

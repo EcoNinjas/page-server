@@ -1,6 +1,7 @@
 (ns econinja.handler
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
+            [econinja.vars :refer [get-var]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-params]]
             [cemerick.friend :as friend]
@@ -18,7 +19,7 @@
   (PUT "/update" req
        (friend/authorize #{::admin}
                          "Hello private update"))
-  (route/files "/" {:root "/econinja/page/_site"})
+  (route/files "/" {:root (get-var :page-root)})
   (route/not-found (html5 [:head [:title "EcoNinjas - 404 - Sie sind auf der falschen Fährte"]]
                           [:body {:background "/images/Hintergrund.jpg"
                                   :style "background-position:center top;"}

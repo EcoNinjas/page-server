@@ -12,7 +12,8 @@
                  [hiccup "1.0.5"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
-  :ring {:handler econinja.handler/app}
+  :ring {:handler econinja.handler/app
+         :async? true}
   :main econinja.server
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]

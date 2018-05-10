@@ -1,4 +1,5 @@
-(defproject econinja (->> (java.util.Date.) (.format (java.text.SimpleDateFormat. "yyyy-MM-dd")))
+(defproject econinja "rolling"
+                                        ;(->> (java.util.Date.) (.format (java.text.SimpleDateFormat. "yyyy-MM-dd")))
   :description "web server for EcoNinja website"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"

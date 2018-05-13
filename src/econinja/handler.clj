@@ -20,6 +20,8 @@
   (PUT "/update" req
        (friend/authorize #{::admin}
                          ((sh "sh" (get-var :update-script)) :out)))
+  (GET "/update" req
+       ((sh "sh" (get-var :update-script)) :out))
   (route/files "/" {:root (get-var :page-root)})
   (route/not-found (html5 [:head [:title "EcoNinjas - 404 - Sie sind auf der falschen Fährte"]]
                           [:body {:background "/images/Hintergrund.jpg"

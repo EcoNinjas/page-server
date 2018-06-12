@@ -15,10 +15,6 @@
                     :password (creds/hash-bcrypt "admin_password")
                     :roles #{::admin}}})
 (defroutes app-routes
-;;  (GET "/protected" req
-;;       (friend/authorize #{::admin}
-;;                         "Update initialised"))
-
   (GET "/update" req
        (println "Starting update...")
        (html5 [:ul (-> (sh "sh" (get-var :update-script))

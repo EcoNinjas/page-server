@@ -18,14 +18,22 @@
 ;;       (friend/authorize #{::admin}
 ;;                         "Update initialised"))
   (PUT "/update" req
+       (println "Starting update...")
        (friend/authorize #{::admin}
-                         ((sh "sh" (get-var :update-script)) :out)))
+                         (-> (sh "sh" (get-var :update-script))
+                              (#(or (% :out) (% :err))))))
   (GET "/update" req
-       ((sh "sh" (get-var :update-script)) :out))
+       (println "Starting update...")
+       (html5 [:ul (-> (sh "sh" (get-var :update-script))
+                       (#(or (% :out) (% :err)))
+                       (#(do (println "result" %) %))
+                       (clojure.string/split #"\n")
+                       (#(map (fn [item] [:li item]) %)))]))
+
   (route/files "/" {:root (get-var :page-root)})
   (route/not-found (html5 [:head [:title "EcoNinjas - 404 - Sie sind auf der falschen Fährte"]]
                           [:body {:background "/images/Hintergrund.jpg"
-                                  :style "background-position:center top;"}
+                                  :style "background-position:center top;min-height:100vh;min-width:100vw"}
                            [:a {:href "/"}
                             [:div {:style "width: 100vw; height:100vh; position:fixed; left:0; bottom:0; display:flex; flex-direction:column; justify-content:center; align-items:center;"}
                              [:img {:src "/images/404.png"

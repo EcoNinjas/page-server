@@ -3,6 +3,7 @@
             [compojure.route :as route]
             [econinja.vars :refer [get-var]]
             [clojure.java.shell :refer [sh]]
+            [ring.middleware.cors :refer  [wrap-cors]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-params]]
             [cemerick.friend :as friend]
@@ -46,4 +47,6 @@
         :workflows [(workflows/interactive-form)
                     (workflows/http-basic :realm "Friend demo")]})
       wrap-json-params
-      wrap-json-response))
+      wrap-json-response
+      (wrap-cors :access-control-allow-origin [#".*"]
+                 :access-control-allow-methods [:post])))

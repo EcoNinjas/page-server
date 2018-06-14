@@ -10,7 +10,9 @@
                  [ring/ring-json "0.4.0"]
                  [environ "1.1.0"]
                  [com.cemerick/friend "0.2.3"]
-                 [hiccup "1.0.5"]]
+                 [hiccup "1.0.5"]
+                 [org.clojure/java.jdbc "0.7.3"]
+                 [org.postgresql/postgresql "42.1.4.jre7"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
   :ring {:handler econinja.handler/app

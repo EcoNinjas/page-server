@@ -6,41 +6,41 @@
 (def email-regex ".+(\\.+)*@(.+\\.)+[a-zA-Z]{2,}")
 (def id-regex (str date-regex "F" time-regex "T" time-regex))
 
-(s/def ::event-title string?)
-(s/def ::event-id (s/and string? #(re-matches (re-pattern id-regex) %)))
+(s/def ::eventtitle string?)
+(s/def ::eventid (s/and string? #(re-matches (re-pattern id-regex) %)))
 (s/def ::time (s/and string? #(re-matches (re-pattern time-regex) %)))
 (s/def ::date (s/and string? #(re-matches (re-pattern date-regex) %)))
 (s/def ::email #(re-matches (re-pattern email-regex) %))
-(s/def ::my-comment string?)
+(s/def ::mycomment string?)
 
 (s/def ::location string?)
 (s/def ::start ::time)
 (s/def ::end ::time)
-(s/def ::max-participants int?)
-(s/def ::cost (s/and int? pos?))
+(s/def ::maxparticipants int?)
+(s/def ::cost (s/and number? pos?))
 (s/def ::event
-  (s/keys :req-un [::event-id
-                   ::event-title
+  (s/keys :req-un [::eventid
+                   ::eventtitle
                    ::location
                    ::start
                    ::end
-                   ::max-partixipants
+                   ::maxparticipants
                    ::cost]))
 
-(s/def ::first-name string?)
-(s/def ::last-name string?)
+(s/def ::firstname string?)
+(s/def ::lastname string?)
 (s/def ::person
   (s/keys :req-un [::email
-                   ::last-name
-                   ::first-name]
-          :opt-un [::my-comment]))
+                   ::lastname
+                   ::firstname]
+          :opt-un [::myComment]))
 
-(s/def ::has-paid boolean?)
-(s/def ::num-people (s/and int? pos?))
-(s/def ::her-comment string?)
+(s/def ::haspaid boolean?)
+(s/def ::numpeople (s/and int? pos?))
+(s/def ::hercomment string?)
 (s/def ::participant
   (s/keys :req-un [::email
-                   ::event-id
-                   ::num-people
-                   ::has-paid]
-          :opt-un [::her-comment ::my-comment]))
+                   ::eventid
+                   ::numpeople
+                   ::haspaid]
+          :opt-un [::hercomment ::mycomment]))

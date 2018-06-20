@@ -5,7 +5,7 @@
   {:page-root "../page"
    :update-script "../update-page.sh"
    :database-url {:dbtype "postgresql"
-                  :dbname "econinjas"
+                  :dbname "oeko"
                   :host   "localhost"
                   :user   "postgres"}})
 

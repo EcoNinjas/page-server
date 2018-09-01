@@ -96,16 +96,27 @@
       (select-keys [:email :eventid :numpeople :hercomment :mycomment])
       (update :numpeople #(or % 1))))
 
+(defn get-event
+  ([eventid] (get-event pg-db eventid))
+  ([db eventid] (sql/query db (query/find-event eventid))))
+
 (defn maybe-create-event
   [event]
   (sql/with-db-transaction [db pg-db]
     (let [event (-> (minimum-event event)
                    (assoc :eventid (gen-id event)))
           {:keys [eventid]} event
-          existing-events (sql/query db (query/find-event eventid))]
+          existing-events (get-event db eventid)]
      (if (empty? existing-events)
        (sql/insert! db :events event))
      event)))
+
+(defn get-all-events []
+  (sql/query pg-db "SELECT * FROM events"))
+
+(defn get-person
+  ([email] (get-person pg-db email))
+  ([db email] (sql/query db (query/find-person email))))
 
 (s/fdef maybe-create-person
         :args (s/cat :person :spec/person))
@@ -113,7 +124,7 @@
   [{:keys [email] :as person}]
   (sql/with-db-transaction [db pg-db]
     (let [person (minimum-person person)
-          existing-people (sql/query db (query/find-person email))]
+          existing-people (get-person db email)]
       (println (count existing-people) (empty? existing-people))
       (if (empty? existing-people)
         (sql/insert! db :people person))))

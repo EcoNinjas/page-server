@@ -13,7 +13,7 @@
             [hiccup.page :refer [html5]]))
 
 (def users {"root" {:username "root"
-                    :password (creds/hash-bcrypt "admin_password")
+                    :password "$2a$10$oDmbYsBezQopTwlMdu/Wn.QaSBX3XJyHvZV1ZGocJDuYKezSRtlta" ;; hash/bcrypt result
                     :roles #{::admin}}})
 
 (defroutes api-routes

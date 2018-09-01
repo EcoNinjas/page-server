@@ -20,7 +20,18 @@
   (context
    "/api/users" []
    (GET "/" [] {:body {:users (db/get-all-people)}})
-   (GET "/:email" [email] {:body {:user (first (db/get-person email))}}))
+   (GET "/:email" [email] {:body {:user (first (db/get-person email))}})
+   (POST "/"
+         [email firstname lastname mycomment]
+         (let [data {:email email
+                     :firstname firstname
+                     :lastname lastname
+                     :mycomment mycomment}]
+           (if (some nil? [email firstname lastname])
+             {:status 400
+              :body {:reason "Missing data"
+                     :data data}}
+             {:body (db/maybe-create-person data)}))))
   (context
    "/api/events" []
    (GET "/" [] {:body {:events (db/get-all-events)}})

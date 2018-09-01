@@ -2,6 +2,7 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [econinja.vars :refer [get-var]]
+            [econinja.db.core :as db]
             [clojure.java.shell :refer [sh]]
             [ring.middleware.cors :refer  [wrap-cors]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
@@ -14,6 +15,19 @@
 (def users {"root" {:username "root"
                     :password (creds/hash-bcrypt "admin_password")
                     :roles #{::admin}}})
+
+(defroutes api-routes
+  (context
+   "/api/users" []
+   (GET "/" [] {:body {:users (db/get-all-people)}})
+   (GET "/:email" [email] {:body {:user (first (db/get-person email))}}))
+  (context
+   "/api/events" []
+   (GET "/" [] {:body {:events (db/get-all-events)}})
+   (GET "/:eventid" [eventid] {:body {:events (db/get-event eventid)}})
+   (GET "/:eventid/slots" [eventid] {:body {:available-slots (db/get-free-slots eventid)}})
+   (GET "/:eventid/participants" [eventid] {:body {:people (db/get-participants eventid)}})))
+
 (defroutes app-routes
   (GET "/update" req
        (println "Starting update...")
@@ -44,7 +58,8 @@
                                     :style "max-height: 70vh; max-width: 70vw;opacity:0.8;"}]]]])))
 
 (def app
-  (-> (wrap-defaults app-routes api-defaults)
+  (-> (routes api-routes app-routes)
+      (wrap-defaults api-defaults)
       (friend/authenticate
        {:credential-fn (partial creds/bcrypt-credential-fn users)
         :workflows [(workflows/interactive-form)

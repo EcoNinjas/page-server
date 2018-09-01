@@ -37,7 +37,27 @@
    (GET "/" [] {:body {:events (db/get-all-events)}})
    (GET "/:eventid" [eventid] {:body {:events (db/get-event eventid)}})
    (GET "/:eventid/slots" [eventid] {:body {:available-slots (db/get-free-slots eventid)}})
-   (GET "/:eventid/participants" [eventid] {:body {:people (db/get-participants eventid)}})))
+   (GET "/:eventid/participants" [eventid] {:body {:people (db/get-participants eventid)}})
+   (POST "/:eventid/enroll/:email" [eventid email numpeople]
+        (if-let [user (-> (db/get-person email) first)]
+          (do
+            (println (assoc user :eventid eventid))
+            {:body {:enrollment (db/maybe-enroll (into user {:eventid eventid
+                                                             :numpeople numpeople}))}})
+          {:status 500
+           :body {:reason "No user with that email found"}}))
+   (POST "/:eventid/enroll" [eventid email firstname lastname mycomment numpeople]
+         (let [data {:email email
+                     :firstname firstname
+                     :lastname lastname
+                     :mycomment mycomment
+                     :eventid eventid
+                     :numpeople numpeople}]
+           (if (some nil? [eventid email firstname lastname])
+             {:status 400
+              :body {:reason "Incomplete user data"
+                     :data data}}
+             {:body {:enrollment (db/maybe-enroll data)}})))))
 
 (defroutes app-routes
   (GET "/update" req
